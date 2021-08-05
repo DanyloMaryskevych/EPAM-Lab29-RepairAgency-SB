@@ -5,6 +5,8 @@ import com.epam.JWTSpringSecurityApp_JavaBrains.main_app.model.Order;
 import com.epam.JWTSpringSecurityApp_JavaBrains.main_app.model.group.OnCreate;
 import com.epam.JWTSpringSecurityApp_JavaBrains.main_app.model.group.OnUpdate;
 import com.epam.JWTSpringSecurityApp_JavaBrains.main_app.repository.OrderRepository;
+import com.epam.JWTSpringSecurityApp_JavaBrains.main_app.rest.assembler.OrderAssembler;
+import com.epam.JWTSpringSecurityApp_JavaBrains.main_app.rest.model.OrderModel;
 import com.epam.JWTSpringSecurityApp_JavaBrains.security.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -20,39 +22,42 @@ public class OrderController {
     private final OrderDAO orderDAO;
     private final JwtUtil jwtUtil;
     private final HttpServletRequest request;
+    private final OrderAssembler orderAssembler;
 
     @Autowired
-    public OrderController(OrderRepository orderRepository, OrderDAO orderDAO, JwtUtil jwtUtil, HttpServletRequest request) {
+    public OrderController(OrderRepository orderRepository, OrderDAO orderDAO, JwtUtil jwtUtil, HttpServletRequest request, OrderAssembler orderAssembler) {
         this.orderRepository = orderRepository;
         this.orderDAO = orderDAO;
         this.jwtUtil = jwtUtil;
         this.request = request;
+        this.orderAssembler = orderAssembler;
     }
 
     @GetMapping("/{id}")
-    public Order getOrderById(@PathVariable Long id) {
-        orderRepository.findById(id).ifPresent(order -> System.out.println(order.getTitle()));
-        return orderRepository.findById(id).orElse(null);
+    public OrderModel getOrderById(@PathVariable Long id) {
+        Order order = orderDAO.findOrderById(id);
+        return orderAssembler.toModel(order);
     }
 
     @PostMapping
-    public Order newOrder(@RequestBody @Validated(OnCreate.class) Order order) {
+    public OrderModel newOrder(@RequestBody @Validated(OnCreate.class) Order order) {
         setCustomerIdFromJWT(order);
         orderDAO.saveOrder(order);
-        return order;
+        return orderAssembler.toModel(order);
     }
 
     @PutMapping("/{id}")
-    public Order updateOrder(@RequestBody @Validated(OnUpdate.class) Order order, @PathVariable Long id) {
+    public OrderModel updateOrder(@RequestBody @Validated(OnUpdate.class) Order order, @PathVariable Long id) {
         order.setId(id);
         setCustomerIdFromJWT(order);
-        orderRepository.save(order);
-        return order;
+        orderDAO.saveOrder(order);
+        return orderAssembler.toModel(order);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable Long id) {
-        orderRepository.deleteById(id);
+    public OrderModel deleteOrder(@PathVariable Long id) {
+        Order order = orderDAO.deleteOrderById(id);
+        return orderAssembler.toModel(order);
     }
 
     private void setCustomerIdFromJWT(Order order) {
