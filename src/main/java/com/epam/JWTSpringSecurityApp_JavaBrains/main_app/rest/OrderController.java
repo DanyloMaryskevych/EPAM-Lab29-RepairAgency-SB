@@ -18,15 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/order")
 public class OrderController {
 
-    private final OrderRepository orderRepository;
     private final OrderDAO orderDAO;
     private final JwtUtil jwtUtil;
     private final HttpServletRequest request;
     private final OrderAssembler orderAssembler;
 
     @Autowired
-    public OrderController(OrderRepository orderRepository, OrderDAO orderDAO, JwtUtil jwtUtil, HttpServletRequest request, OrderAssembler orderAssembler) {
-        this.orderRepository = orderRepository;
+    public OrderController(OrderDAO orderDAO, JwtUtil jwtUtil, HttpServletRequest request, OrderAssembler orderAssembler) {
         this.orderDAO = orderDAO;
         this.jwtUtil = jwtUtil;
         this.request = request;
