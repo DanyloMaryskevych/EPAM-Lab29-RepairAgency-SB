@@ -13,4 +13,7 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     @Override
     <S extends Order> S save(S s);
+
+    @Override
+    void deleteById(Long id);
 }
