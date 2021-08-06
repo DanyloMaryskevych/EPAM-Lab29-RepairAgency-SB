@@ -48,7 +48,7 @@ public class OrderController {
     public OrderModel updateOrder(@RequestBody @Validated(OnUpdate.class) Order order, @PathVariable Long id) {
         order.setId(id);
         setCustomerIdFromJWT(order);
-        orderDAO.saveOrder(order);
+        orderDAO.updateOrder(order);
         return orderAssembler.toModel(order);
     }
 
