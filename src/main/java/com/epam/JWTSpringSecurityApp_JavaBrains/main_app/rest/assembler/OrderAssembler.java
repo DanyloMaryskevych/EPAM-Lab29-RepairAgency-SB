@@ -26,7 +26,7 @@ public class OrderAssembler extends RepresentationModelAssemblerSupport<Order, O
     public OrderModel toModel(Order entity) {
         OrderModel orderModel = new OrderModel(entity);
 
-        Link get = linkTo(methodOn(OrderController.class).getOrderById(entity.getId())).withRel(GET_REL);
+        Link get = linkTo(methodOn(OrderController.class).getOrder(entity.getId())).withRel(GET_REL);
         Link create = linkTo(methodOn(OrderController.class).newOrder(entity)).withRel(CREATE_REL);
         Link update = linkTo(methodOn(OrderController.class).updateOrder(entity, entity.getId()))
                 .withRel(UPDATE_REL);
