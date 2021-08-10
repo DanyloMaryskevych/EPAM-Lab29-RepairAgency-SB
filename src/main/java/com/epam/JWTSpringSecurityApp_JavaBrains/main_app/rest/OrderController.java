@@ -7,10 +7,12 @@ import com.epam.JWTSpringSecurityApp_JavaBrains.main_app.rest.assembler.OrderAss
 import com.epam.JWTSpringSecurityApp_JavaBrains.main_app.rest.model.OrderModel;
 import com.epam.JWTSpringSecurityApp_JavaBrains.security.util.JwtUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -20,6 +22,11 @@ public class OrderController implements OrderApi {
     private final JwtUtil jwtUtil;
     private final HttpServletRequest request;
     private final OrderAssembler orderAssembler;
+
+    @Override
+    public List<Order> getAllOrders(String page) {
+        return orderDAO.getOrders(page);
+    }
 
     @Override
     public OrderModel getOrder(Long id) {

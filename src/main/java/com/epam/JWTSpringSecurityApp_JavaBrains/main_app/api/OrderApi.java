@@ -8,14 +8,22 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api
 @RequestMapping("/api/v1/order")
 public interface OrderApi {
+
+    @ApiOperation("Get all orders")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping
+    List<Order> getAllOrders(@RequestParam(name = "page") String page);
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", paramType = "path", readOnly = true, value = "Order id")
